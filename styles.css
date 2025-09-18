@@ -146,39 +146,272 @@ body {
 
 .teletext-table {
   display: grid;
-  gap: 10px;
-  font-size: clamp(26px, 5vw, 36px);
+  gap: 14px;
+  font-size: clamp(24px, 4.5vw, 34px);
 }
 
 .teletext-table .table-header {
   background: var(--teletext-black);
   color: var(--teletext-green);
-  padding: 4px 10px;
+  padding: 6px 14px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 18px;
+  grid-template-columns: minmax(110px, 1.1fr) minmax(200px, 2.2fr) minmax(120px, 1.1fr) minmax(140px, 1.2fr);
+  column-gap: 14px;
+  letter-spacing: 0.08em;
 }
 
-.teletext-table .table-row {
+.departures-list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  column-gap: 18px;
-  padding: 4px 10px;
+  gap: 12px;
+}
+
+.teletext-table .col {
+  display: flex;
+  align-items: center;
+}
+
+.teletext-table .table-header .col {
+  color: var(--teletext-green);
+}
+
+.board-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 1.1fr) minmax(200px, 2.2fr) minmax(120px, 1.1fr) minmax(140px, 1.2fr);
+  column-gap: 14px;
+  padding: 4px 6px;
+  border: none;
   background: var(--teletext-blue);
   border-bottom: 2px solid var(--teletext-black);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  width: 100%;
+  appearance: none;
 }
 
-.teletext-table .table-row:nth-child(odd) {
+.board-row:nth-child(even) {
   background: #0000cc;
 }
 
-.teletext-table .price {
-  text-align: right;
-  color: var(--teletext-yellow);
+.board-row .flight .board-cell {
+  --board-cell-color: var(--teletext-cyan);
 }
 
-.teletext-table .destination {
+.board-row .destination .board-cell {
+  --board-cell-color: var(--teletext-white);
+}
+
+.board-row .depart .board-cell {
+  --board-cell-color: var(--teletext-yellow);
+}
+
+.board-row .status .board-cell {
+  --board-cell-color: var(--teletext-green);
+}
+
+.board-row[data-status*='delayed'] .status .board-cell {
+  --board-cell-color: var(--teletext-red);
+}
+
+.board-row[data-status*='final-call'] .status .board-cell {
+  --board-cell-color: var(--teletext-yellow);
+}
+
+.board-row[data-status*='go-to-gate'] .status .board-cell {
+  --board-cell-color: var(--teletext-cyan);
+}
+
+.board-row[data-status*='new-gate'] .status .board-cell {
+  --board-cell-color: var(--teletext-magenta);
+}
+
+.board-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35);
+}
+
+.board-row.is-active {
+  outline: 3px solid var(--teletext-yellow);
+  outline-offset: 4px;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.4);
+}
+
+.board-row:focus-visible {
+  outline: 4px solid var(--teletext-cyan);
+  outline-offset: 4px;
+}
+
+.board-cell {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background: linear-gradient(to bottom, #14144a 0%, #090932 100%);
+  border: 2px solid #050527;
+  border-radius: 6px;
+  min-height: clamp(46px, 7vw, 64px);
+  padding: 0 12px;
+  color: var(--board-cell-color, var(--teletext-yellow));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.35);
+  perspective: 800px;
+  overflow: hidden;
+}
+
+.board-cell-face,
+.board-cell-flip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  backface-visibility: hidden;
+  font-size: inherit;
+  font-weight: inherit;
+  overflow: hidden;
+}
+
+.board-cell-face {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.35));
+}
+
+.board-cell-face--upper {
+  top: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+.board-cell-face--lower {
+  bottom: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.board-cell-flip {
+  display: none;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.5));
+}
+
+.board-cell-flip--upper {
+  top: 0;
+  transform-origin: bottom;
+}
+
+.board-cell-flip--lower {
+  bottom: 0;
+  transform-origin: top;
+  transform: rotateX(90deg);
+}
+
+.board-cell.is-flipping .board-cell-face--upper {
+  opacity: 0;
+}
+
+.board-cell.is-flipping .board-cell-flip {
+  display: flex;
+}
+
+.board-cell.is-flipping .board-cell-flip--upper {
+  animation: flap-upper 0.6s cubic-bezier(0.37, 0, 0.63, 1) forwards;
+}
+
+.board-cell.is-flipping .board-cell-flip--lower {
+  animation: flap-lower 0.6s cubic-bezier(0.37, 0, 0.63, 1) forwards;
+}
+
+@keyframes flap-upper {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes flap-lower {
+  0% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.selection-panel {
+  background: var(--teletext-black);
+  border: 4px solid var(--teletext-green);
+  padding: 18px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-transform: uppercase;
+}
+
+.selection-title {
+  margin: 0;
+  color: var(--teletext-cyan);
+  font-size: clamp(26px, 5vw, 36px);
+  letter-spacing: 0.14em;
+}
+
+.selection-placeholder {
+  margin: 0;
+  color: var(--teletext-green);
+  font-size: clamp(20px, 4vw, 26px);
+  letter-spacing: 0.08em;
+}
+
+.selection-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selection-destination {
+  margin: 0;
+  color: var(--teletext-yellow);
+  font-size: clamp(32px, 7vw, 48px);
+  letter-spacing: 0.18em;
+}
+
+.selection-meta {
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
   color: var(--teletext-white);
+  font-size: clamp(20px, 4vw, 26px);
+  letter-spacing: 0.08em;
+}
+
+.selection-price {
+  margin: 0;
+  color: var(--teletext-magenta);
+  font-size: clamp(34px, 8vw, 56px);
+  letter-spacing: 0.12em;
+}
+
+.selection-description {
+  margin: 0;
+  color: var(--teletext-white);
+  font-size: clamp(18px, 3.5vw, 24px);
+  line-height: 1.2;
 }
 
 .teletext-footer {
@@ -233,12 +466,24 @@ body {
   }
 
   .teletext-table .table-header,
-  .teletext-table .table-row {
+  .board-row {
     grid-template-columns: repeat(2, 1fr);
-    text-align: left;
+    row-gap: 8px;
   }
 
-  .teletext-table .price {
-    text-align: left;
+  .teletext-table .table-header .flight,
+  .board-row .flight {
+    grid-column: 1 / -1;
+  }
+
+  .board-cell {
+    min-height: clamp(38px, 12vw, 50px);
+    padding: 0 8px;
+  }
+
+  .selection-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
 }

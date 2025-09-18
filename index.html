@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
 </head>
 <body>
   <main class="teletext-screen">
@@ -33,58 +34,28 @@
 
     <section class="teletext-table">
       <div class="table-header">
-        <span class="col destination">ALGARVE</span>
-        <span class="col price">£175</span>
-        <span class="col destination">G.CANARIA</span>
-        <span class="col price">£169</span>
+        <span class="col flight">FLIGHT</span>
+        <span class="col destination">DESTINATION</span>
+        <span class="col depart">DEPART</span>
+        <span class="col status">STATUS</span>
       </div>
-      <div class="table-row">
-        <span class="col destination">MAJORCA</span>
-        <span class="col price">£199</span>
-        <span class="col destination">TENERIFE</span>
-        <span class="col price">£165</span>
-      </div>
-      <div class="table-row">
-        <span class="col destination">TUNISIA</span>
-        <span class="col price">£149</span>
-        <span class="col destination">F'VENTURA</span>
-        <span class="col price">£185</span>
-      </div>
-      <div class="table-row">
-        <span class="col destination">TURKEY</span>
-        <span class="col price">£199</span>
-        <span class="col destination">LANZAROTE</span>
-        <span class="col price">£179</span>
-      </div>
-      <div class="table-row">
-        <span class="col destination">BENIDORM</span>
-        <span class="col price">£139</span>
-        <span class="col destination">CORFU</span>
-        <span class="col price">£159</span>
-      </div>
-      <div class="table-row">
-        <span class="col destination">GREECE</span>
-        <span class="col price">£209</span>
-        <span class="col destination">HURGHADA</span>
-        <span class="col price">£209</span>
-      </div>
-      <div class="table-row">
-        <span class="col destination">CYPRUS</span>
-        <span class="col price">£245</span>
-        <span class="col destination">4xSHARM</span>
-        <span class="col price">£309</span>
-      </div>
-      <div class="table-row">
-        <span class="col destination">4xMALTA</span>
-        <span class="col price">£215</span>
-        <span class="col destination">4xTABA</span>
-        <span class="col price">£379</span>
-      </div>
-      <div class="table-row">
-        <span class="col destination">4xC.D.SOL</span>
-        <span class="col price">£235</span>
-        <span class="col destination">CARIBBEAN</span>
-        <span class="col price">£259</span>
+      <div class="departures-list" data-board-list role="list" aria-live="polite"></div>
+    </section>
+
+    <section class="selection-panel" data-selection-panel aria-live="polite">
+      <h2 class="selection-title">Подробности тура</h2>
+      <p class="selection-placeholder" data-selection-placeholder>
+        Выберите предложение, чтобы узнать детали пакета Monster Travel.
+      </p>
+      <div class="selection-details" data-selection-details hidden>
+        <p class="selection-destination" data-selection-destination></p>
+        <p class="selection-meta">
+          <span data-selection-duration></span>
+          <span aria-hidden="true">·</span>
+          <span data-selection-gate></span>
+        </p>
+        <p class="selection-price" data-selection-price></p>
+        <p class="selection-description" data-selection-description></p>
       </div>
     </section>
 
